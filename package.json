@@ -11,5 +11,8 @@
     "url": "git+https://github.com/aamfahim/fragments.git"
   },
   "author": "Abdullah Al Mamun Fahim",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "prettier": "3.0.3"
+  }
 }
