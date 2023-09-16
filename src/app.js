@@ -21,8 +21,20 @@ app.use(helmet());
 // Use CORS middleware so we can make requests across origins
 app.use(cors());
 
+// Use Passport middleware to secure routes
+const passport = require('passport');
+
+// Use authenticate middleware to verify tokens
+// with the AWS JWT Verifier module, and make sure
+// that we can trust the user's identity
+const authenticate = require('./auth');
+
 // Use gzip/deflate compression middleware
 app.use(compression());
+
+// Set up our passport authentication middleware
+passport.use(authenticate.strategy());
+app.use(passport.initialize());
 
 // Define our routes
 app.use('/', require('./routes'));
