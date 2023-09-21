@@ -2,6 +2,9 @@
 
 const express = require('express');
 
+// modular function to create custom responses
+const { createSuccessResponse } = require('../../src/response');
+
 // version and author from package.json
 const { version, author } = require('../../package.json');
 // Our authentication middleware
@@ -20,16 +23,19 @@ router.use(`/v1`, authenticate(), require('./api'));
  * we'll respond with a 200 OK.  If not, the server isn't healthy.
  */
 router.get('/', (req, res) => {
+
+  const data = {
+    author,
+    githubUrl: 'https://github.com/aamfahim/fragments',
+    version,
+  };
+
+  const response = createSuccessResponse(data);
+
   // Client's shouldn't cache this response (always request it fresh)
   res.setHeader('Cache-Control', 'no-cache');
   // Send a 200 'OK' response
-  res.status(200).json({
-    status: 'ok',
-    author,
-    // Use your own GitHub URL for this!
-    githubUrl: 'https://github.com/aamfahim/fragments',
-    version,
-  });
+  res.status(200).json(response);
 });
 
 module.exports = router;
