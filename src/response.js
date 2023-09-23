@@ -1,5 +1,7 @@
 // src/response.js
 
+const logger = require("./logger");
+
 /**
  * A successful response looks like:
  *
@@ -9,6 +11,7 @@
  * }
  */
 module.exports.createSuccessResponse = function (data) {
+    logger.info({data}, `passed to createSuccessResponse`);
     return {
         "status": 'ok',
         // Use the spread operator to clone `data` into our object, see:
@@ -29,6 +32,7 @@ module.exports.createSuccessResponse = function (data) {
  * }
  */
 module.exports.createErrorResponse = function (code, message) {
+    logger.info({code, message} ,`passed to createErrorResponse`);
     return {
         "status": "error",
         "error": {
