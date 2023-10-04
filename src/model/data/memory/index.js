@@ -29,7 +29,7 @@ async function listFragments(ownerId, expand = false) {
   const fragments = await metadata.query(ownerId);
 
   // If we don't get anything back, or are supposed to give expanded fragments, return
-  if (expand || !fragments) {
+  if (expand || !fragments.length) {
     return fragments;
   }
 
