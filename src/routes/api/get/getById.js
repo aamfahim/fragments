@@ -1,4 +1,4 @@
-// src/routes/api/get.js
+// src/routes/api/get/getById.js
 
 const logger = require("../../../logger");
 const { Fragment } = require("../../../model/fragment");
@@ -19,23 +19,23 @@ module.exports = async (req, res) => {
             util.setHeader(req, res, fragment);
 
             const response = createSuccessResponse(fragment);
-            res.status(200).json(response);
+            return res.status(200).json(response);
         }
         else if (ext == "txt" && fragment.mimeType == "text/plain") {
             // Check if an extension is provided and it is text/plain
             util.setHeader(req, res, fragment);
 
             const response = createSuccessResponse(fragment);
-            res.status(200).json(response);
+            return res.status(200).json(response);
 
         } else {
             const response = createErrorResponse(415, 'Unsupported media type or conversion not possible');
-            return res.status(response.error.code).send(response);
+            return  res.status(response.error.code).send(response);
         }
     } catch (error) {
         logger.error( error );
         const response = createErrorResponse(400, { error });
-        res.status(response.error.code).json(response);
+        return res.status(response.error.code).json(response);
     }
 };
 

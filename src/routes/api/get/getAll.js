@@ -1,4 +1,4 @@
-// src/routes/api/get.js
+// src/routes/api/get/getAll.js
 
 const util = require("../../../util");
 const logger = require("../../../logger");
@@ -15,17 +15,13 @@ module.exports = async (req, res) => {
     const data = await Fragment.byUser(req.user, expand);
 
     util.setHeader(req, res);
-
-    // const baseUrl = 'http://' + req.headers.host + '/v1/fragments';
-    // res.setHeader('Location', baseUrl);
-    // res.setHeader('Access-Control-Expose-Headers', 'Location');
-
-    const response = createSuccessResponse(data);
-    res.status(200).json(response);
+    const obj = { fragments: data };
+    const response = createSuccessResponse(obj);
+    return res.status(200).json(response);
   } catch (error) {
     logger.error(error);
     const response = createErrorResponse(400, { error });
-    res.status(response.error.code).json(response);
+    return res.status(response.error.code).json(response);
   }
 };
 
