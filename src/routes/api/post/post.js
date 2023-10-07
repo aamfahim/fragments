@@ -1,3 +1,5 @@
+// src/routes/api/post/post.js
+
 const logger = require("../../../logger");
 const { Fragment } = require("../../../model/fragment");
 const { createSuccessResponse, createErrorResponse } = require("../../../response");
@@ -5,6 +7,8 @@ const util = require("../../../util");
 
 
 module.exports = async (req, res) => {
+
+    logger.debug("Body received by post is a buffer:", Buffer.isBuffer(req.body));
 
     try {
         if (Buffer.isBuffer(req.body)) {
@@ -25,7 +29,7 @@ module.exports = async (req, res) => {
 
     } catch (error) {
         logger.error(error);
-        const response = createErrorResponse(400, error);
+        const response = createErrorResponse(400, error.message);
         return res.status(response.error.code).json(response);
     }
 
