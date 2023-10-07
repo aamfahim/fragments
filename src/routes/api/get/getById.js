@@ -6,10 +6,11 @@ const util = require("../../../util");
 const { createSuccessResponse, createErrorResponse } = require("../../../response");
 
 /**
- * Get a list of fragments for the current user by id
+ * Get a fragment for the current user by id
  */
 module.exports = async (req, res) => {
     const { id, ext } = req.params;
+    logger.debug({ id }, { ext }, "received by getById");
 
     try {
         const fragment = await Fragment.byId(req.user, id);
@@ -30,11 +31,11 @@ module.exports = async (req, res) => {
 
         } else {
             const response = createErrorResponse(415, 'Unsupported media type or conversion not possible');
-            return  res.status(response.error.code).send(response);
+            return res.status(response.error.code).send(response);
         }
     } catch (error) {
-        logger.error( error );
-        const response = createErrorResponse(400, { error });
+        logger.error(error);
+        const response = createErrorResponse(400, error.message);
         return res.status(response.error.code).json(response);
     }
 };

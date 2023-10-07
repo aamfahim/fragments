@@ -10,18 +10,22 @@ const { createSuccessResponse, createErrorResponse } = require("../../../respons
  */
 module.exports = async (req, res) => {
 
-  const expand = (req?.query?.expand == 1 ? true : false) || false;
-  try {
-    const data = await Fragment.byUser(req.user, expand);
+    const expand = (req?.query?.expand == 1 ? true : false) || false;
+    logger.info({ expand }, "is received by getAll");
 
-    util.setHeader(req, res);
-    const obj = { fragments: data };
-    const response = createSuccessResponse(obj);
-    return res.status(200).json(response);
-  } catch (error) {
-    logger.error(error);
-    const response = createErrorResponse(400, { error });
-    return res.status(response.error.code).json(response);
-  }
+    try {
+        const data = await Fragment.byUser(req.user, expand);
+
+        util.setHeader(req, res);
+        const obj = { fragments: data };
+        logger.info({ obj }, "retrieved by getAll");
+        const response = createSuccessResponse(obj);
+        return res.status(200).json(response);
+
+    } catch (error) {
+        logger.error(error);
+        const response = createErrorResponse(400, error.message);
+        return res.status(response.error.code).json(response);
+    }
 };
 
