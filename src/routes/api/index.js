@@ -8,6 +8,9 @@ const express = require('express');
 // Create a router on which to mount our API endpoints
 const router = express.Router();
 
+// Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
+const contentType = require('content-type');
+
 // Use Fragment model
 const { Fragment } = require('../../model/fragment');
 
@@ -26,9 +29,14 @@ const rawBody = () =>
             // See if we can parse this content type. If we can, `req.body` will be
             // a Buffer (e.g., `Buffer.isBuffer(req.body) === true`). If not, `req.body`
             // will be equal to an empty Object `{}` and `Buffer.isBuffer(req.body) === false`
-            // const { type } = contentType.parse(req);
-            // return Fragment.isSupportedType(type);
-            return Fragment.isSupportedType(req.get('Content-Type'));
+            try {
+                const { type } = contentType.parse(req);
+                return Fragment.isSupportedType(type);    
+            } catch (error) {
+                return false;
+            }
+            
+            // return Fragment.isSupportedType(req.get('Content-Type'));
         },
     });
 
