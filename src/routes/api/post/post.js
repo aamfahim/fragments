@@ -11,8 +11,8 @@ module.exports = async (req, res) => {
     logger.debug("Body received by post is a buffer:", Buffer.isBuffer(req.body));
 
     try {
-        if (Buffer.isBuffer(req.body)) {
-            const newFragment = new Fragment({ ownerId: req.user, type: req.get('Content-Type'), size: req.body.byteLength });
+        if (Buffer.isBuffer(req.body) && Fragment.isSupportedType(req.get('Content-Type'))) {
+            const newFragment = new Fragment({ ownerId: req.user, type: req.get('Content-Type')});
 
             logger.info({ newFragment }, 'created');
 
