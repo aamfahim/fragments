@@ -5,7 +5,14 @@ module.exports.setHeader = (req, res, fragment) => {
 
     logger.debug(res.headers, "before set");
 
-    const baseUrl = 'http://' + req.headers.host + '/v1/fragments/'; // create base url
+    let baseUrl;
+
+    if (req.headers.host) {
+        baseUrl = 'http://' + req.headers.host + '/v1/fragments/'; // create base url from req.headers        
+    }
+    else {
+        baseUrl = process.env.API_URL + '/v1/fragments/'; // create base url from .env      
+    }
 
     res.setHeader('Access-Control-Expose-Headers', 'Location'); // add Location to Access-Control-Expose-Headers
 
