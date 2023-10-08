@@ -183,12 +183,7 @@ class Fragment {
      * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
      */
     static isSupportedType(value) {
-        try {
-            const { type } = contentType.parse(value);
-            return Fragment.validTypes.includes(type);
-        } catch (error) {
-            return false;
-        }
+        return Fragment.validTypes.includes(value);
     }
 }
 
