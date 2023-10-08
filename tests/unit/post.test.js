@@ -87,7 +87,7 @@ describe('POST /v1/fragments', () => {
         const res = await request(app)
             .post('/v1/fragments')
             .auth('user1@email.com', 'password1')
-            .set('Content-Type', 'jack/jill')
+            .set('Content-Type', 'jackjill')
             .send('This is another test fragment');
         console.log(res.text);
         expect(res.statusCode).toBe(415); // assuming 415 is returned for unsupported media type
