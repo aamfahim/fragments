@@ -3,7 +3,7 @@
 const logger = require("../../../logger");
 const { Fragment } = require("../../../model/fragment");
 const util = require("../../../util");
-const { createSuccessResponse, createErrorResponse } = require("../../../response");
+const { createErrorResponse } = require("../../../response");
 
 /**
  * Get a fragment for the current user by id
@@ -14,22 +14,22 @@ module.exports = async (req, res) => {
 
     try {
         const fragment = await Fragment.byId(req.user, id);
+        const buffer = await fragment.getData();
+        const data = buffer.toString();
+
+        util.setHeader(req, res, fragment);
 
         if (!ext) {
             // no extension given, send the fragment
-            util.setHeader(req, res, fragment);
-
-            const response = createSuccessResponse(fragment);
-            return res.status(200).json(response);
+            return res.status(200).send(data);
+            
         }
+        // Check if an extension is provided and it is text/plain
         else if (ext == "txt" && fragment.mimeType == "text/plain") {
-            // Check if an extension is provided and it is text/plain
-            util.setHeader(req, res, fragment);
+            return res.status(200).send(data);
 
-            const response = createSuccessResponse(fragment);
-            return res.status(200).json(response);
-
-        } else {
+        }
+         else {
             const response = createErrorResponse(415, 'Unsupported media type or conversion not possible');
             return res.status(response.error.code).send(response);
         }
