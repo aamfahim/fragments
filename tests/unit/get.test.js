@@ -189,6 +189,32 @@ describe('GET /v1/fragments', () => {
         expect(responseBody).toEqual(responseBody2);
     });
 
+    // returns an existing fragment data with expected Content-Type
+    test('returns an existing fragment data with expected Content-Type', async () => {
+
+        const postRes = await request(app)
+            .post('/v1/fragments')
+            .auth('user1@email.com', 'password1')
+            .set('Content-Type', 'text/plain')
+            .send('This is a test fragment');
+
+        expect(postRes.statusCode).toBe(201);
+        const responseBody = JSON.parse(postRes.text); // Manually parse the response text
+        delete responseBody.status;
+
+        const fragmentId = responseBody.id; // adjust as necessary to match your response structure
+
+        const getRes = await request(app)
+            .get(`/v1/fragments/${fragmentId}`)
+            .auth('user1@email.com', 'password1');
+        const responseBody2 = JSON.parse(getRes.text); // Manually parse the response text
+        delete responseBody2.status
+        console.log(responseBody2);
+
+        expect(responseBody2.type).toBe(responseBody.type);
+
+    });
+
     // status code is 415 when unsupported type is requested    
     test('error with unsupported type ', async () => {
 
