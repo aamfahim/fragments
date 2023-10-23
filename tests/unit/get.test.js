@@ -106,7 +106,7 @@ describe('GET /v1/fragments', () => {
             .send('This is the first test fragment');
     
         const responseBody1 = JSON.parse(postRes1.text);
-        delete responseBody1.status
+        delete responseBody1.status;
     
         const postRes2 = await request(app)
             .post('/v1/fragments')
@@ -115,7 +115,7 @@ describe('GET /v1/fragments', () => {
             .send('This is the second test fragment');
     
         const responseBody2 = JSON.parse(postRes2.text);
-        delete responseBody2.status
+        delete responseBody2.status;
     
         // GET the list of fragments with expand=1
         const getRes = await request(app)
@@ -154,8 +154,7 @@ describe('GET /v1/fragments', () => {
             .get(`/v1/fragments/${fragmentId}`)
             .auth('user1@email.com', 'password1');
         const responseBody2 = JSON.parse(getRes.text); // Manually parse the response text
-        delete responseBody2.status
-        console.log(responseBody2);
+        delete responseBody2.status;
 
         expect(getRes.statusCode).toBe(200);
 
@@ -181,8 +180,7 @@ describe('GET /v1/fragments', () => {
             .get(`/v1/fragments/${fragmentId}.txt`)
             .auth('user1@email.com', 'password1');
         const responseBody2 = JSON.parse(getRes.text); // Manually parse the response text
-        delete responseBody2.status
-        console.log(responseBody2);
+        delete responseBody2.status;
 
         expect(getRes.statusCode).toBe(200);
 
@@ -208,8 +206,7 @@ describe('GET /v1/fragments', () => {
             .get(`/v1/fragments/${fragmentId}`)
             .auth('user1@email.com', 'password1');
         const responseBody2 = JSON.parse(getRes.text); // Manually parse the response text
-        delete responseBody2.status
-        console.log(responseBody2);
+        delete responseBody2.status;
 
         expect(responseBody2.type).toBe(responseBody.type);
 
@@ -233,7 +230,6 @@ describe('GET /v1/fragments', () => {
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}.md`)
             .auth('user1@email.com', 'password1');
-        console.log(getRes);
         expect(getRes.statusCode).toBe(415);        
 
     });
