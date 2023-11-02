@@ -19,12 +19,11 @@ class Fragment {
     // all possible values that this class can work with
     static validTypes = [
         `text/plain`,
-        /*
-         Currently, only text/plain is supported. Others will be added later.
-      
         `text/markdown`,
         `text/html`,
         `application/json`,
+        /*
+         Currently, only text/plain is supported. Others will be added later.
         `image/png`,
         `image/jpeg`,
         `image/webp`,
