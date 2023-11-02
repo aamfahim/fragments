@@ -188,32 +188,30 @@ describe('GET /v1/fragments', () => {
         expect(responseBody).toEqual(responseBody2);
     });
     
-    // // posted fragment can be retrieved by id and ext
-    // test('posted fragment can be retrieved by id and ext ', async () => {
+    // posted text fragment can be retrieved by id and ext
+    test('posted text fragment can be retrieved by id and ext', async () => {
 
-    //     const postRes = await request(app)
-    //         .post('/v1/fragments')
-    //         .auth('user1@email.com', 'password1')
-    //         .set('Content-Type', 'text/plain')
-    //         .send('This is a test fragment');
+        const data = 'This is a fragment';
+        const postRes = await request(app)
+            .post('/v1/fragments')
+            .auth('user1@email.com', 'password1')
+            .set('Content-Type', 'text/plain')
+            .send(data);
 
-    //     expect(postRes.statusCode).toBe(201);
-    //     const responseBody = JSON.parse(postRes.text); // Manually parse the response text
-    //     delete responseBody.status;
+        expect(postRes.statusCode).toBe(201);
+        const responseBody = JSON.parse(postRes.text); // Manually parse the response text
+        const fragmentId = responseBody.id; // adjust as necessary to match your response structure
 
-    //     const fragmentId = responseBody.id; // adjust as necessary to match your response structure
+        const getRes = await request(app)
+            .get(`/v1/fragments/${fragmentId}.txt`)
+            .auth('user1@email.com', 'password1');
 
-    //     const getRes = await request(app)
-    //         .get(`/v1/fragments/${fragmentId}.txt`)
-    //         .auth('user1@email.com', 'password1');
-    //     console.log(getRes);
-    //     const responseBody2 = JSON.parse(getRes.text); // Manually parse the response text
-    //     delete responseBody2.status;
+        const returned_fragment = getRes.text; 
 
-    //     expect(getRes.statusCode).toBe(200);
+        expect(getRes.statusCode).toBe(200);
 
-    //     expect(responseBody).toEqual(responseBody2);
-    // });
+        expect(returned_fragment).toEqual(data);
+    });
 
     // returns an existing fragment data with expected Content-Type
     test('returns an existing fragment data with expected Content-Type', async () => {
