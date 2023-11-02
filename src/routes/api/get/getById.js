@@ -19,17 +19,25 @@ module.exports = async (req, res) => {
 
         util.setHeader(req, res, fragment);
 
-        if (!ext) {
-            // no extension given, send the fragment
-            return res.status(200).send(data);
-            
+        // if no extension is provided
+        if (!ext) {                 
+            if (fragment.isText) {  // and if the fragment is text
+                return res.status(200).send(data);
+            }
+            else if (fragment.mimeType == "application/json") { // and if the fragment is json
+                return res.status(200).json(data);
+            }
+            else if (fragment.mimeType.startsWith("image/")) { // and if the fragment is image
+                //TODO: make adjustments for image
+                return res.status(200).send(data);
+            }
         }
         // Check if an extension is provided and it is text/plain
         else if (ext == "txt" && fragment.mimeType == "text/plain") {
             return res.status(200).send(data);
 
         }
-         else {
+        else {            
             const response = createErrorResponse(415, 'Unsupported media type or conversion not possible');
             return res.status(response.error.code).send(response);
         }
