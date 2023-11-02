@@ -174,8 +174,26 @@ class Fragment {
      * @returns {Array<string>} list of supported mime types
      */
     get formats() {
-        return this.isText ? ['text/plain'] : [];
+        const { type } = contentType.parse(this.type);
+        switch (type) {
+            case 'text/plain':
+                return ['txt'];
+            case 'text/markdown':
+                return ['md', 'html', 'txt'];
+            case 'text/html':
+                return ['html', 'txt'];
+            case 'application/json':
+                return ['json', 'txt'];
+            case 'image/png':
+            case 'image/jpeg':
+            case 'image/webp':
+            case 'image/gif':
+                return ['png', 'jpg', 'webp', 'gif'];
+            default:
+                return [];
+        }
     }
+    
 
     /**
      * Returns true if we know how to work with this content type
