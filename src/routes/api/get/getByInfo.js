@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
     try {
         const fragment = await Fragment.byId(req.user, id);
 
-        util.setHeader(req, res, fragment);
+        util.setHeader(req, res, fragment, "application/json");
 
         const response = createSuccessResponse(fragment);
         return res.status(200).json(response);
