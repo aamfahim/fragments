@@ -38,7 +38,7 @@ describe('POST /v1/fragments', () => {
             .send('this is a fragment');
 
         const parsedContentType = contentType.parse(res.headers['content-type']);
-        expect(parsedContentType.type).toBe('text/plain');
+        expect(parsedContentType.type).toBe('application/json');
     });
 
     // response headers have location attribute defined in the header
@@ -87,9 +87,8 @@ describe('POST /v1/fragments', () => {
         const res = await request(app)
             .post('/v1/fragments')
             .auth('user1@email.com', 'password1')
-            .set('Content-Type', 'jackjill')
+            .set('Content-Type', 'text/xml')
             .send('This is another test fragment');
-        console.log(res.text);
         expect(res.statusCode).toBe(415); // assuming 415 is returned for unsupported media type
         expect(res.body.status).toBe('error'); // adjust this based on your actual error response structure
     });
