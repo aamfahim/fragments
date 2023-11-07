@@ -30,10 +30,10 @@ module.exports = async (req, res) => {
                 const JsonData = JSON.parse(data);
                 return res.status(200).json(JsonData);
             }
-            else if (fragment.mimeType.startsWith("image/")) { // and if the fragment is image
-                //TODO: make adjustments for image
-                return res.status(200).send(data);
-            }
+            // else if (fragment.mimeType.startsWith("image/")) { // and if the fragment is image
+            //     //TODO: make adjustments for image
+            //     return res.status(200).send(data);
+            // }
         }
         // if the extension is supported
         else if (fragment.formats.includes(ext)) {
