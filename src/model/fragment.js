@@ -183,16 +183,16 @@ class Fragment {
                 return ['html', 'txt'];
             case 'application/json':
                 return ['json', 'txt'];
-            case 'image/png':
-            case 'image/jpeg':
-            case 'image/webp':
-            case 'image/gif':
-                return ['png', 'jpg', 'webp', 'gif'];
+            // case 'image/png':
+            // case 'image/jpeg':
+            // case 'image/webp':
+            // case 'image/gif':
+            //     return ['png', 'jpg', 'webp', 'gif'];
             default:
                 return [];
         }
     }
-    
+
 
     /**
      * Returns true if we know how to work with this content type
@@ -200,12 +200,8 @@ class Fragment {
      * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
      */
     static isSupportedType(value) {
-        try {
-            const { type } = contentType.parse(value);
-            return Fragment.validTypes.includes(type);
-        } catch (error) {
-            return false;
-        }
+        const { type } = contentType.parse(value);
+        return Fragment.validTypes.includes(type);
     }
 }
 
