@@ -1,0 +1,81 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:418619032563:task-definition/fragments-task:1",
+    "containerDefinitions": [
+        {
+            "name": "fragments",
+            "image": "aamfahim/fragments:latest",
+            "cpu": 256,
+            "memoryReservation": 512,
+            "links": [],
+            "portMappings": [
+                {
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "entryPoint": [],
+            "command": [],
+            "environment": [
+                {
+                    "name": "API_URL",
+                    "value": "http://ec2con-ecsel-y5mo91eyaazi-1966679509.us-east-1.elb.amazonaws.com:8080"
+                },
+                {
+                    "name": "PORT",
+                    "value": "8080"
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/fragments-task",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ],
+    "family": "fragments-task",
+    "executionRoleArn": "arn:aws:iam::418619032563:role/LabRole",
+    "networkMode": "awsvpc",
+    "revision": 1,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "name": "ecs.capability.execution-role-awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "256",
+    "memory": "512",
+    "registeredAt": "2023-11-15T15:29:27.811Z",
+    "registeredBy": "arn:aws:sts::418619032563:assumed-role/voclabs/user2767371=aamfahim@myseneca.ca",
+    "tags": []
+}
