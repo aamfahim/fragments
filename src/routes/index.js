@@ -13,6 +13,8 @@ const { authenticate } = require('../auth');
 // Create a router that we can use to mount our API
 const router = express.Router();
 
+// require hostname for health check
+const { hostname } = require('os');
 /**
  * Expose all of our API routes on /v1/* to include an API version.
  */
@@ -28,6 +30,7 @@ router.get('/', (req, res) => {
     author,
     githubUrl: 'https://github.com/aamfahim/fragments',
     version,
+    hostname: hostname(),
   };
 
   const response = createSuccessResponse(data);
