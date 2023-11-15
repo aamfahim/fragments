@@ -23,6 +23,8 @@ module.exports = async (req, res) => {
 
         // if no extension is provided
         if (!ext) {
+            logger.info('no ext response type');
+
             if (fragment.isText) {  // and if the fragment is text
                 return res.status(200).send(data);
             }
@@ -43,11 +45,14 @@ module.exports = async (req, res) => {
 
             // if text no conversion
             if (fragment.mimeType == "text/plain") {
+                logger.info('text/plain extension requested');
                 return res.status(200).send(data);
             }
 
             // if html convert to text, html
             if (fragment.mimeType == "text/html") {
+                logger.info('text/html extension requested');
+
                 if (ext == "txt") {
                     util.setHeader(req, res, fragment, "text/plain");
                 }
@@ -59,6 +64,8 @@ module.exports = async (req, res) => {
 
             // if json convert to json, text
             if (fragment.mimeType == "application/json") {
+                logger.info('application/json extension requested');
+
                 if (ext == "json") {
                     const JsonData = JSON.parse(data);
                     return res.status(200).json(JsonData);
@@ -72,6 +79,8 @@ module.exports = async (req, res) => {
 
             // if md convert to text, html, md
             if (fragment.mimeType == "text/markdown") {
+                logger.info('text/markdown extension requested');
+
                 if (ext == "txt") {
                     util.setHeader(req, res, fragment, "text/plain");
                     return res.status(200).send(data);
@@ -91,6 +100,8 @@ module.exports = async (req, res) => {
 
         }
         else {
+            logger.info('unsupported extension requested');
+            
             const response = createErrorResponse(415, 'Unsupported media type or conversion not possible');
             return res.status(response.error.code).send(response);
         }
