@@ -20,7 +20,8 @@ module.exports = async (req, res) => {
             await newFragment.setData(req.body);
             util.setHeader(req, res, newFragment, "application/json");
 
-            const response = createSuccessResponse(newFragment);
+            const obj = { fragment: newFragment };
+            const response = createSuccessResponse(obj);
 
             return res.status(201).json(response);
         } else {

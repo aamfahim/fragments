@@ -69,17 +69,17 @@ describe('POST /v1/fragments', () => {
             .set('Content-Type', 'text/plain')
             .send(text_frag)
 
-        const responseBody = JSON.parse(res.text); // Manually parse the response text
-
-        expect(responseBody).toMatchObject({
+        expect(res.body).toMatchObject({
             status: 'ok',
-            id: expect.any(String),
-            ownerId: expect.any(String),
-            created: expect.any(String),
-            updated: expect.any(String),
-            type: 'text/plain'
+            fragment: {
+                id: expect.any(String),
+                ownerId: expect.any(String),
+                created: expect.any(String),
+                updated: expect.any(String),
+                type: 'text/plain',
+                size: Buffer.byteLength(text_frag),
+            }
         });
-        expect(responseBody.size).toBe(Buffer.byteLength('This is another test fragment'));
     });
 
     // unsupported type of fragment creation fails
