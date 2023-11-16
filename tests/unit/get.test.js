@@ -52,7 +52,7 @@ describe('GET /v1/fragments', () => {
         expect(postRes.statusCode).toBe(201);
         const responseBody = JSON.parse(postRes.text); // Manually parse the response text
 
-        const fragmentId = responseBody.id; // adjust as necessary to match your response structure
+        const fragmentId = responseBody.fragment.id; // adjust as necessary to match your response structure
 
         const getRes = await request(app)
             .get('/v1/fragments')
@@ -73,7 +73,7 @@ describe('GET /v1/fragments', () => {
             .send('This is the first test fragment');
 
         const responseBody1 = JSON.parse(postRes1.text);
-        const postId1 = responseBody1.id;
+        const postId1 = responseBody1.fragment.id;
 
         const postRes2 = await request(app)
             .post('/v1/fragments')
@@ -83,7 +83,7 @@ describe('GET /v1/fragments', () => {
 
         const responseBody2 = JSON.parse(postRes2.text);
 
-        const postId2 = responseBody2.id;
+        const postId2 = responseBody2.fragment.id;
 
         const getRes = await request(app)
             .get('/v1/fragments')
@@ -105,8 +105,7 @@ describe('GET /v1/fragments', () => {
             .set('Content-Type', 'text/plain')
             .send('This is the first test fragment');
 
-        const responseBody1 = JSON.parse(postRes1.text);
-        delete responseBody1.status;
+        const responseBody1 = JSON.parse(postRes1.text).fragment;
 
         const postRes2 = await request(app)
             .post('/v1/fragments')
@@ -114,8 +113,7 @@ describe('GET /v1/fragments', () => {
             .set('Content-Type', 'text/plain')
             .send('This is the second test fragment');
 
-        const responseBody2 = JSON.parse(postRes2.text);
-        delete responseBody2.status;
+        const responseBody2 = JSON.parse(postRes2.text).fragment;
 
         // GET the list of fragments with expand=1
         const getRes = await request(app)
@@ -148,7 +146,7 @@ describe('GET /v1/fragments', () => {
         expect(postRes.statusCode).toBe(201);
         const responseBody = JSON.parse(postRes.text); // Manually parse the response text
 
-        const fragmentId = responseBody.id; // adjust as necessary to match your response structure
+        const fragmentId = responseBody.fragment.id; // adjust as necessary to match your response structure
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}`)
@@ -173,19 +171,17 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = JSON.parse(postRes.text); // Manually parse the response text
-        delete responseBody.status;
 
-        const fragmentId = responseBody.id; // adjust as necessary to match your response structure
+        const fragmentId = responseBody.fragment.id; // Extracting id from the nested fragment object
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}/info`)
             .auth('user1@email.com', 'password1');
-        const responseBody2 = JSON.parse(getRes.text); // Manually parse the response text
-        delete responseBody2.status;
+        const responseBody2 = JSON.parse(postRes.text).fragment; // Extracting the fragment object
 
         expect(getRes.statusCode).toBe(200);
 
-        expect(responseBody).toEqual(responseBody2);
+        expect(responseBody.fragment).toEqual(responseBody2);
     });
 
     // posted text fragment can be retrieved by id and ext (text/plain)
@@ -200,7 +196,7 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = JSON.parse(postRes.text); // Manually parse the response text
-        const fragmentId = responseBody.id; // adjust as necessary to match your response structure
+        const fragmentId = responseBody.fragment.id; // Extracting id from the nested fragment object
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}.txt`)
@@ -224,7 +220,7 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = JSON.parse(postRes.text); // Manually parse the response text
-        const fragmentId = responseBody.id; // adjust as necessary to match your response structure
+        const fragmentId = responseBody.fragment.id; // adjust as necessary to match your response structure
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}`)
@@ -244,15 +240,13 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = JSON.parse(postRes.text);
-        delete responseBody.status;
 
-        const fragmentId = responseBody.id;
+        const fragmentId = responseBody.fragment.id;
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}/info`)
             .auth('user1@email.com', 'password1');
         const responseBody2 = JSON.parse(getRes.text);
-        delete responseBody2.status;
 
         expect(getRes.statusCode).toBe(200);
         expect(responseBody).toEqual(responseBody2);
@@ -269,7 +263,7 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = JSON.parse(postRes.text);
-        const fragmentId = responseBody.id;
+        const fragmentId = responseBody.fragment.id;
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}.html`)
@@ -292,7 +286,7 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = JSON.parse(postRes.text);
-        const fragmentId = responseBody.id;
+        const fragmentId = responseBody.fragment.id;
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}.txt`)
@@ -315,7 +309,7 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = JSON.parse(postRes.text);
-        const fragmentId = responseBody.id;
+        const fragmentId = responseBody.fragment.id;
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}`)
@@ -334,16 +328,14 @@ describe('GET /v1/fragments', () => {
             .send(data);
 
         expect(postRes.statusCode).toBe(201);
-        const responseBody = JSON.parse(postRes.text);
-        delete responseBody.status;
+        const responseBody = JSON.parse(postRes.text);        
 
-        const fragmentId = responseBody.id;
+        const fragmentId = responseBody.fragment.id;
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}/info`)
             .auth('user1@email.com', 'password1');
         const responseBody2 = JSON.parse(getRes.text);
-        delete responseBody2.status;
 
         expect(getRes.statusCode).toBe(200);
         expect(responseBody).toEqual(responseBody2);
@@ -360,7 +352,7 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = JSON.parse(postRes.text);
-        const fragmentId = responseBody.id;
+        const fragmentId = responseBody.fragment.id;
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}.txt`)
@@ -384,7 +376,7 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = JSON.parse(postRes.text);
-        const fragmentId = responseBody.id;
+        const fragmentId = responseBody.fragment.id;
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}.md`)
@@ -408,7 +400,7 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = JSON.parse(postRes.text);
-        const fragmentId = responseBody.id;
+        const fragmentId = responseBody.fragment.id;
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}.html`)
@@ -432,7 +424,7 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = JSON.parse(postRes.text);
-        const fragmentId = responseBody.id;
+        const fragmentId = responseBody.fragment.id;
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}`)
@@ -453,15 +445,14 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = postRes.body;
-        delete responseBody.status;
 
-        const fragmentId = responseBody.id;
+        const fragmentId = responseBody.fragment.id;
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}/info`)
             .auth('user1@email.com', 'password1');
+
         const responseBody2 = getRes.body;
-        delete responseBody2.status;
 
         expect(getRes.statusCode).toBe(200);
         expect(responseBody).toEqual(responseBody2);
@@ -478,7 +469,7 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = postRes.body;
-        const fragmentId = responseBody.id;
+        const fragmentId = responseBody.fragment.id;
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}.json`)
@@ -501,7 +492,7 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = postRes.body;
-        const fragmentId = responseBody.id;
+        const fragmentId = responseBody.fragment.id;
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}.txt`)
@@ -525,7 +516,7 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = postRes.body;
-        const fragmentId = responseBody.id;
+        const fragmentId = responseBody.fragment.id;
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}`)
@@ -546,9 +537,7 @@ describe('GET /v1/fragments', () => {
 
         expect(postRes.statusCode).toBe(201);
         const responseBody = JSON.parse(postRes.text); // Manually parse the response text
-        delete responseBody.status;
-
-        const fragmentId = responseBody.id; // adjust as necessary to match your response structure
+        const fragmentId = responseBody.fragment.id; // adjust as necessary to match your response structure
 
         const getRes = await request(app)
             .get(`/v1/fragments/${fragmentId}.md`)
