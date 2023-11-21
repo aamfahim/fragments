@@ -17,6 +17,7 @@ const { Fragment } = require('../../model/fragment');
 // Get all the defined get and post routes
 const get = require("./get");
 const post = require("./post");
+const _delete = require("./delete");
 
 
 
@@ -50,5 +51,7 @@ router.use('/fragments', get);
 // You can use Buffer.isBuffer(req.body) to test if it was parsed by the raw body parser.
 router.use('/fragments', rawBody(), post);
 
+// Attach all our delete routes
+router.use('/fragments', _delete);
 
 module.exports = router;
