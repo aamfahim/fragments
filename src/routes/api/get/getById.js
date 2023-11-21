@@ -14,21 +14,31 @@ module.exports = async (req, res) => {
     const { id, ext } = req.params;
     logger.debug({ id }, { ext }, "received by getById");
     
-    let fragment;
+    let fragment, buffer;
 
     try {
         fragment = await Fragment.byId(req.user, id);
         
     } catch (error) {
-        logger.info('unsupported extension requested');
+        logger.info('Fragment not found');
         
         const response = createErrorResponse(404, 'Fragment not found');
+        return res.status(response.error.code).send(response);
+    }
+
+    try {
+        buffer = await fragment.getData();
+        
+    } catch (error) {
+        logger.info('Fragment data not found');
+        
+        const response = createErrorResponse(404, 'Fragment data not found');
         return res.status(response.error.code).send(response);
     }
     
     try {
 
-        const buffer = await fragment.getData();
+        
         const data = buffer.toString();
 
         util.setHeader(req, res, fragment);
