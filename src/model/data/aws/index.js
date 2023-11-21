@@ -40,7 +40,7 @@ function readFragment(ownerId, id) {
 }
 
 // Writes a fragment's data to an S3 Object in a Bucket
-// https://github.com/awsdocs/aws-sdk-for-javascript-v3/blob/main/doc_source/s3-example-creating-buckets.md#upload-an-existing-object-to-an-amazon-s3-bucket
+// https://github.com/awsdocs/aws-sdk-for-javascript-v3/blob/main/doc_source/javascript_s3_code_examples.md
 async function writeFragmentData(ownerId, id, data) {
   // Create the PUT API params from our details
   const params = {
@@ -65,7 +65,7 @@ async function writeFragmentData(ownerId, id, data) {
 }
 
 // Reads a fragment's data from S3 and returns (Promise<Buffer>)
-// https://github.com/awsdocs/aws-sdk-for-javascript-v3/blob/main/doc_source/s3-example-creating-buckets.md#getting-a-file-from-an-amazon-s3-bucket
+// https://github.com/awsdocs/aws-sdk-for-javascript-v3/blob/main/doc_source/javascript_s3_code_examples.md
 async function readFragmentData(ownerId, id) {
   // Create the PUT API params from our details
   const params = {
