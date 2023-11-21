@@ -91,6 +91,9 @@ jobs:
           environment-variables: |
             LOG_LEVEL=info
             NODE_ENV=production
+            AWS_COGNITO_CLIENT_ID=${{ secrets.AWS_COGNITO_CLIENT_ID }}
+            AWS_COGNITO_POOL_ID=${{ secrets.AWS_COGNITO_POOL_ID }}
+
 
         # Deploy your ECS task definition
       - name: Deploy Amazon ECS task definition
