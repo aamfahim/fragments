@@ -25,6 +25,10 @@
                 {
                     "name": "PORT",
                     "value": "8080"
+                },
+                {
+                    "name": "AWS_S3_BUCKET_NAME",
+                    "value": "aamfahim-fragments"
                 }
             ],
             "mountPoints": [],
@@ -40,6 +44,8 @@
         }
     ],
     "family": "fragments-task",
+    "ipcMode": null,
+    "taskRoleArn": "arn:aws:iam::418619032563:role/LabRole",
     "executionRoleArn": "arn:aws:iam::418619032563:role/LabRole",
     "networkMode": "awsvpc",
     "revision": 1,
