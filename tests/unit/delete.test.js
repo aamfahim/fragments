@@ -51,9 +51,9 @@ describe('DELETE /v1/fragments/:id', () => {
 
         const delRes = await request(app)
             .delete(`/v1/fragments/${fragmentId}`)
-            .auth('user1@email.com', 'password1');
+            .auth('user1@email.com', 'password1');        
 
-        expect(delRes.body).toMatchObject({ status: 'ok' }); // match obeject structure
+        expect(delRes.body).toMatchObject({ status: 'ok' }); // match object structure
     });
 
     // Non-existent fragment ID returns a 404
