@@ -12,8 +12,19 @@ module.exports = async (req, res) => {
     const { id } = req.params;
     logger.debug({ id }, "received by getByInfo");
 
+    let fragment;
+    
     try {
-        const fragment = await Fragment.byId(req.user, id);
+        fragment = await Fragment.byId(req.user, id);
+        
+    } catch (error) {
+        logger.info('unsupported extension requested');
+        
+        const response = createErrorResponse(404, 'Fragment not found');
+        return res.status(response.error.code).send(response);
+    }
+
+    try {
 
         util.setHeader(req, res, fragment, "application/json");
 
@@ -25,7 +36,7 @@ module.exports = async (req, res) => {
 
     } catch (error) {
         logger.error(error);
-        const response = createErrorResponse(400, error.message);
+        const response = createErrorResponse(500, error.message);
         return res.status(response.error.code).json(response);
     }
 };

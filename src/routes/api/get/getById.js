@@ -13,9 +13,21 @@ const md = require('markdown-it')();
 module.exports = async (req, res) => {
     const { id, ext } = req.params;
     logger.debug({ id }, { ext }, "received by getById");
+    
+    let fragment;
 
     try {
-        const fragment = await Fragment.byId(req.user, id);
+        fragment = await Fragment.byId(req.user, id);
+        
+    } catch (error) {
+        logger.info('unsupported extension requested');
+        
+        const response = createErrorResponse(404, 'Fragment not found');
+        return res.status(response.error.code).send(response);
+    }
+    
+    try {
+
         const buffer = await fragment.getData();
         const data = buffer.toString();
 
@@ -107,7 +119,7 @@ module.exports = async (req, res) => {
         }
     } catch (error) {
         logger.error(error);
-        const response = createErrorResponse(400, error.message);
+        const response = createErrorResponse(500, error.message);
         return res.status(response.error.code).json(response);
     }
 };

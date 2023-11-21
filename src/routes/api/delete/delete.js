@@ -12,6 +12,16 @@ module.exports = async (req, res) => {
     logger.debug({ id }, "received by delete");
 
     try {
+         await Fragment.byId(req.user, id);
+        
+    } catch (error) {
+        logger.info('unsupported extension requested');
+        
+        const response = createErrorResponse(404, 'Fragment not found');
+        return res.status(response.error.code).send(response);
+    }
+
+    try {
         await Fragment.delete(req.user, id);
         
         logger.info({ id }, "deleted");
@@ -22,7 +32,7 @@ module.exports = async (req, res) => {
 
     } catch (error) {
         logger.error(error);
-        const response = createErrorResponse(404, error.message);
+        const response = createErrorResponse(500, error.message);
         return res.status(response.error.code).json(response);
     }
 };
