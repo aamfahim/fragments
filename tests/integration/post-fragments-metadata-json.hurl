@@ -7,7 +7,7 @@ Content-Type: application/json
 [BasicAuth]
 user1@email.com:password1
 # Body of the request
-{"message": "This is a test JSON fragment"}
+`{"message": "This is a test JSON fragment"}`
 
 # We expect to get back an HTTP 201
 HTTP/1.1 201
@@ -18,22 +18,20 @@ HTTP/1.1 201
 jsonpath "$.status" == "ok"
 # Check the fragment id for correct syntax
 jsonpath "$.fragment.id" matches "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-# Check the owner id for correct syntax
-jsonpath "$.fragment.ownerId" matches "^[0-9a-fA-F]+$"
-# Check if created is string
-jsonpath "$.fragment.created" isString
-# Check if updated is string
-jsonpath "$.fragment.updated" isString
-# Check if type is correct
-jsonpath "$.fragment.type" == "application/json"
-# Check if size is correct type
-jsonpath "$.fragment.size" isInteger
 
 [Captures]
+fragmentId: jsonpath "$.fragment.id"
 url: header "Location"
+id: jsonpath "$.fragment.id"
+ownerId: jsonpath "$.fragment.ownerId"
+created: jsonpath "$.fragment.created"
+updated: jsonpath "$.fragment.updated"
+type: jsonpath "$.fragment.type"
+size: jsonpath "$.fragment.size"
+
 
 # Perform a GET request to retrieve the fragment's details
-GET {{url}}
+GET {{url}}/info
 [BasicAuth]
 user1@email.com:password1
 
@@ -46,8 +44,13 @@ Content-Type: application/json; charset=utf-8
 # Assertions about the GET response
 [Asserts]
 # Check for successful status
-# jsonpath "$.status" == "ok"
+jsonpath "$.status" == "ok"
 
 # Check for fragment equality
-{"message":"This is a test JSON fragment"}
+jsonpath "$.fragment.id" == {{id}}
+jsonpath "$.fragment.ownerId" == {{ownerId}}
+jsonpath "$.fragment.created" == {{created}}
+jsonpath "$.fragment.updated" == {{updated}}
+jsonpath "$.fragment.type" == {{type}}
+jsonpath "$.fragment.size" == {{size}}
 
