@@ -1,11 +1,9 @@
 const s3Client = require('./s3Client');
 const ddbDocClient = require('./ddbDocClient');
 const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
-const { PutCommand, GetCommand, QueryCommand } = require('@aws-sdk/lib-dynamodb');
+const { PutCommand, GetCommand, QueryCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 const logger = require('../../../logger');
 
-// Create two in-memory databases: one for fragment metadata and the other for raw data
-const metadata = new MemoryDB();
 
 // Convert a stream of data into a Buffer, by collecting
 // chunks of data until finished, then assembling them together.
@@ -163,25 +161,50 @@ async function listFragments(ownerId, expand = false) {
 // Deletes a fragment's data from a Bucket
 // https://github.com/awsdocs/aws-sdk-for-javascript-v3/blob/main/doc_source/javascript_s3_code_examples.md
 async function deleteFragment(ownerId, id) {
+
+  // Delete fragment data from S3
+
   // Create the DELETE API params from our details
-  const params = {
+  const paramsS3 = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
     // Our key will be a mix of the ownerID and fragment id, written as a path
     Key: `${ownerId}/${id}`,
   };
 
   // Create a DELETE Object command to send to S3
-  const command = new DeleteObjectCommand(params);
+  const commandS3 = new DeleteObjectCommand(paramsS3);
 
   try {
     // Use our client to send the command
-    await s3Client.send(command);
+    await s3Client.send(commandS3);
   } catch (err) {
     // If anything goes wrong, log enough info that we can debug
-    const { Bucket, Key } = params;
+    const { Bucket, Key } = paramsS3;
     logger.error({ err, Bucket, Key }, 'Error deleting fragment data from S3');
     throw new Error('unable to delete fragment data');
   }
+
+
+  // Delete fragment meta data from dynamodb
+  
+  // Configure our GET params, with the name of the table and key (partition key + sort key)
+  const paramsDDB = {
+    TableName: process.env.AWS_DYNAMODB_TABLE_NAME,
+    Key: { ownerId, id },
+  };
+
+  // Create a GET command to send to DynamoDB
+  const commandDDB = new DeleteCommand(paramsDDB);
+
+  try {
+    // Use our client to send the command
+    await ddbDocClient.send(commandDDB);
+  } catch (err) {
+    logger.warn({ err, paramsDDB }, 'Error deleting fragment meta data from DynamoDB');
+    throw new Error('unable to delete fragment meta data');
+  }
+
+
 }
 
 module.exports.listFragments = listFragments;
