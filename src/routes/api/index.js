@@ -18,7 +18,7 @@ const { Fragment } = require('../../model/fragment');
 const get = require("./get");
 const post = require("./post");
 const _delete = require("./delete");
-
+const put = require("./put");
 
 
 // Support sending various Content-Types on the body up to 5M in size
@@ -53,5 +53,8 @@ router.use('/fragments', rawBody(), post);
 
 // Attach all our delete routes
 router.use('/fragments', _delete);
+
+// Attach all our put routes
+router.use('/fragments', rawBody(), put);
 
 module.exports = router;
