@@ -20,7 +20,7 @@ describe('PUT /v1/fragments/:id', () => {
         expect(res.statusCode).toBe(401);
     });
 
-    // Authenticated user can update a fragment
+    // Authenticated user can update a fragment (text/plain)
     test('authenticated users can update a fragment', async () => {
         const postRes = await request(app)
             .post('/v1/fragments/')
@@ -36,6 +36,69 @@ describe('PUT /v1/fragments/:id', () => {
             .auth('user1@email.com', 'password1')
             .set('Content-Type', 'text/plain')
             .send('this is an updated fragment');
+
+        expect(putRes.statusCode).toBe(200); // check status code
+    });
+
+    // Authenticated user can update a fragment (text/markdown)
+    test('authenticated users can update a fragment', async () => {
+        const postRes = await request(app)
+            .post('/v1/fragments/')
+            .auth('user1@email.com', 'password1')
+            .set('Content-Type', 'text/markdown')
+            .send('#this is a fragment');
+
+        expect(postRes.statusCode).toBe(201); // post a fragment
+        const fragmentId = postRes.body.fragment.id; // get id from response
+
+        const putRes = await request(app)
+            .put(`/v1/fragments/${fragmentId}`)
+            .auth('user1@email.com', 'password1')
+            .set('Content-Type', 'text/markdown')
+            .send('#this is an updated fragment');
+
+        expect(putRes.statusCode).toBe(200); // check status code
+    });
+
+    // Authenticated user can update a fragment (text/html)
+    test('authenticated users can update a fragment', async () => {
+        const postRes = await request(app)
+            .post('/v1/fragments/')
+            .auth('user1@email.com', 'password1')
+            .set('Content-Type', 'text/html')
+            .send('<h1>this is a fragment</h1>');
+
+        expect(postRes.statusCode).toBe(201); // post a fragment
+        const fragmentId = postRes.body.fragment.id; // get id from response
+
+        const putRes = await request(app)
+            .put(`/v1/fragments/${fragmentId}`)
+            .auth('user1@email.com', 'password1')
+            .set('Content-Type', 'text/html')
+            .send('<h1>this is an updated fragment</h1>');
+
+        expect(putRes.statusCode).toBe(200); // check status code
+    });
+
+    // Authenticated user can update a fragment (application/json)
+    test('authenticated users can update a fragment', async () => {
+        const data = { content: 'This is a test fragment' };
+        const postRes = await request(app)
+            .post('/v1/fragments/')
+            .auth('user1@email.com', 'password1')
+            .set('Content-Type', 'application/json')
+            .send(data);
+
+        expect(postRes.statusCode).toBe(201); // post a fragment
+        const fragmentId = postRes.body.fragment.id; // get id from response
+
+
+        const updateData = { content: 'This is a test update fragment' };
+        const putRes = await request(app)
+            .put(`/v1/fragments/${fragmentId}`)
+            .auth('user1@email.com', 'password1')
+            .set('Content-Type', 'application/json')
+            .send(updateData);
 
         expect(putRes.statusCode).toBe(200); // check status code
     });
@@ -142,7 +205,7 @@ describe('PUT /v1/fragments/:id', () => {
             .auth('user1@email.com', 'password1')
             .set('Content-Type', 'text/plain')
             .send('this is an updated fragment');
-        
+
         expect(putRes.statusCode).toBe(200); // post a fragment
 
         expect(putRes.body).toMatchObject(expectedStructure); // match object structure
