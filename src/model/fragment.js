@@ -22,12 +22,12 @@ class Fragment {
         `text/markdown`,
         `text/html`,
         `application/json`,
-        /*
-         Currently, only text/plain is supported. Others will be added later.
         `image/png`,
         `image/jpeg`,
         `image/webp`,
         `image/gif`,
+        /*
+         Currently, only text/plain is supported. Others will be added later.
         */
     ];
 
@@ -183,11 +183,11 @@ class Fragment {
                 return ['html', 'txt'];
             case 'application/json':
                 return ['json', 'txt'];
-            // case 'image/png':
-            // case 'image/jpeg':
-            // case 'image/webp':
-            // case 'image/gif':
-            //     return ['png', 'jpg', 'webp', 'gif'];
+            case 'image/png':
+            case 'image/jpeg':
+            case 'image/webp':
+            case 'image/gif':
+                return ['png', 'jpg', 'webp', 'gif'];
             default:
                 return [];
         }
