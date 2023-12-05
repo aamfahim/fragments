@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
         fragment = await Fragment.byId(req.user, id);
         
     } catch (error) {
-        logger.info('unsupported extension requested');
+        logger.info('Fragment not found');
         
         const response = createErrorResponse(404, 'Fragment not found');
         return res.status(response.error.code).send(response);
