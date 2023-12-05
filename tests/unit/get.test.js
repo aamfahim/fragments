@@ -545,4 +545,40 @@ describe('GET /v1/fragments', () => {
         expect(getRes.statusCode).toBe(415);
 
     });
+
+    // Non-existent data retrival with fragment ID returns a 404
+    test('non-existent fragment ID returns a 404', async () => {
+        const postRes = await request(app)
+            .post('/v1/fragments/')
+            .auth('user1@email.com', 'password1')
+            .set('Content-Type', 'text/plain')
+            .send('this is a fragment');
+
+        expect(postRes.statusCode).toBe(201); // post a fragment
+        const fragmentId = postRes.body.fragment.id; // get id from response
+
+        const getRes = await request(app)
+            .get(`/v1/fragments/${fragmentId+1}`)
+            .auth('user1@email.com', 'password1');
+
+        expect(getRes.statusCode).toBe(404);
+    });
+
+    // Non-existent meta data retrival with fragment ID returns a 404
+    test('non-existent fragment ID returns a 404', async () => {
+        const postRes = await request(app)
+            .post('/v1/fragments/')
+            .auth('user1@email.com', 'password1')
+            .set('Content-Type', 'text/plain')
+            .send('this is a fragment');
+
+        expect(postRes.statusCode).toBe(201); // post a fragment
+        const fragmentId = postRes.body.fragment.id; // get id from response
+
+        const getRes = await request(app)
+            .get(`/v1/fragments/${fragmentId+1}/info`)
+            .auth('user1@email.com', 'password1');
+
+        expect(getRes.statusCode).toBe(404);
+    });
 });
