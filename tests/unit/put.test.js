@@ -142,7 +142,7 @@ describe('PUT /v1/fragments/:id', () => {
             .auth('user1@email.com', 'password1')
             .set('Content-Type', 'text/plain')
             .send('this is an updated fragment');
-        console.log(putRes.body);
+        
         expect(putRes.statusCode).toBe(200); // post a fragment
 
         expect(putRes.body).toMatchObject(expectedStructure); // match object structure
