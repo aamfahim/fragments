@@ -5,7 +5,7 @@ const { Fragment } = require("../../../model/fragment");
 const util = require("../../../util");
 const { createErrorResponse } = require("../../../response");
 const md = require('markdown-it')();
-
+const sharp = require('sharp');
 
 /**
  * Get a fragment for the current user by id
@@ -13,32 +13,32 @@ const md = require('markdown-it')();
 module.exports = async (req, res) => {
     const { id, ext } = req.params;
     logger.debug({ id }, { ext }, "received by getById");
-    
+
     let fragment, buffer;
 
     try {
         fragment = await Fragment.byId(req.user, id);
-        
+
     } catch (error) {
         logger.info('Fragment not found');
-        
+
         const response = createErrorResponse(404, 'Fragment not found');
         return res.status(response.error.code).send(response);
     }
 
     try {
         buffer = await fragment.getData();
-        
+
     } catch (error) {
         logger.info('Fragment data not found');
-        
+
         const response = createErrorResponse(404, 'Fragment data not found');
         return res.status(response.error.code).send(response);
     }
-    
+
     try {
 
-        
+
         const data = buffer.toString();
 
         util.setHeader(req, res, fragment);
@@ -54,10 +54,9 @@ module.exports = async (req, res) => {
                 const JsonData = JSON.parse(data);
                 return res.status(200).json(JsonData);
             }
-            // else if (fragment.mimeType.startsWith("image/")) { // and if the fragment is image
-            //     //TODO: make adjustments for image
-            //     return res.status(200).send(data);
-            // }
+            else if (fragment.mimeType.startsWith("image/")) { // and if the fragment is image
+                return res.status(200).send(data);
+            }
         }
         // if the extension is supported
         else if (fragment.formats.includes(ext)) {
@@ -118,12 +117,41 @@ module.exports = async (req, res) => {
                     return res.status(200).send(data);
                 }
             }
-            // send appropriate response
+
+            // if image convert to png, jpg, webp, gif
+            if (fragment.mimeType.startsWith("image/")) {
+                logger.info('image extension requested');
+
+                if (ext == "png" || ext == "jpg" || ext == "webp" || ext == 'gif') {
+
+                    // covert the image to the requested format
+                    // sharp(buffer)
+                    //     .toFormat(ext)  // Convert the image to the requested format
+                    //     .toBuffer()     // Get the result as a buffer
+                    //     .then(outputBuffer => {
+                    //         // Set the Content-Type for the response
+                    //         util.setHeader(req, res, fragment, `image/${ext}`);
+                    //         // Send the converted image buffer as the response
+                    //         return res.status(200).send(outputBuffer);
+                    //     });
+
+
+                    const outputBuffer = await sharp(buffer)
+                        .toFormat(ext)  // Convert the image to the requested format
+                        .toBuffer();    // Get the result as a buffer
+
+                    // Set the Content-Type for the response
+                    util.setHeader(req, res, fragment, `image/${ext}`);
+                    // Send the converted image buffer as the response
+                    return res.status(200).send(outputBuffer);
+                }
+
+            }
 
         }
         else {
             logger.info('unsupported extension requested');
-            
+
             const response = createErrorResponse(415, 'Unsupported media type or conversion not possible');
             return res.status(response.error.code).send(response);
         }
