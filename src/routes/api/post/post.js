@@ -10,8 +10,9 @@ const util = require("../../../util");
 module.exports = async (req, res) => {
 
     logger.debug("Body received by post is a buffer:", Buffer.isBuffer(req.body));
-    const { type } = contentType.parse(req.get('Content-Type'));
     try {
+        const { type } = contentType.parse(req.get('Content-Type'));
+        
         if (Buffer.isBuffer(req.body) && Fragment.isSupportedType(type)) {
             const newFragment = new Fragment({ ownerId: req.user, type: req.get('Content-Type')});
 
