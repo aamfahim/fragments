@@ -50,7 +50,7 @@ ENV PORT=8080 \
     NPM_CONFIG_COLOR=false
 
 # Install curl
-RUN apk --no-cache add curl=8.4.0-r0
+RUN apk --no-cache add curl=8.5.0-r0
 
 # Set the user as Node
 USER node
