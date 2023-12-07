@@ -131,13 +131,13 @@ module.exports = async (req, res) => {
                     return res.status(200).send(buffer);
                 }
                 else if (ext == "gif") {
-                    outputBuffer = await sharp(buffer)
+                    outputBuffer = await sharp(buffer, {animated:true})
                         .gif()  // Convert the image to gif
                         .toBuffer();    // Get the result as a buffer
                 }
                 else if (ext == "png" || ext == "jpg" || ext == "webp") {
                     
-                    outputBuffer = await sharp(buffer)
+                    outputBuffer = await sharp(buffer, {animated:true})
                         .toFormat(ext)  // Convert the image to the requested format
                         .toBuffer();    // Get the result as a buffer
 
