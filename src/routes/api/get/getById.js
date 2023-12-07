@@ -121,31 +121,31 @@ module.exports = async (req, res) => {
             // if image convert to png, jpg, webp, gif
             if (fragment.mimeType.startsWith("image/")) {
                 logger.info('image extension requested');
+                let outputBuffer;
+                let fragType = fragment.mimeType.split('/').pop().toLowerCase();
+                if (fragType == "jpeg") {
+                    fragType = "jpg";
+                }
 
-                if (ext == "png" || ext == "jpg" || ext == "webp" || ext == 'gif') {
-
-                    // covert the image to the requested format
-                    // sharp(buffer)
-                    //     .toFormat(ext)  // Convert the image to the requested format
-                    //     .toBuffer()     // Get the result as a buffer
-                    //     .then(outputBuffer => {
-                    //         // Set the Content-Type for the response
-                    //         util.setHeader(req, res, fragment, `image/${ext}`);
-                    //         // Send the converted image buffer as the response
-                    //         return res.status(200).send(outputBuffer);
-                    //     });
-
-
-                    const outputBuffer = await sharp(buffer)
+                if (fragType == ext) {
+                    return res.status(200).send(buffer);
+                }
+                else if (ext == "gif") {
+                    outputBuffer = await sharp(buffer)
+                        .gif()  // Convert the image to gif
+                        .toBuffer();    // Get the result as a buffer
+                }
+                else if (ext == "png" || ext == "jpg" || ext == "webp") {
+                    
+                    outputBuffer = await sharp(buffer)
                         .toFormat(ext)  // Convert the image to the requested format
                         .toBuffer();    // Get the result as a buffer
 
-                    // Set the Content-Type for the response
-                    util.setHeader(req, res, fragment, `image/${ext}`);
-                    // Send the converted image buffer as the response
-                    return res.status(200).send(outputBuffer);
                 }
-
+                // Set the Content-Type for the response
+                util.setHeader(req, res, fragment, `image/${ext}`);
+                // Send the converted image buffer as the response
+                return res.status(200).send(outputBuffer);
             }
 
         }
