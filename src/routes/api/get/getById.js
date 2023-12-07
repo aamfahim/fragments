@@ -55,7 +55,7 @@ module.exports = async (req, res) => {
                 return res.status(200).json(JsonData);
             }
             else if (fragment.mimeType.startsWith("image/")) { // and if the fragment is image
-                return res.status(200).send(data);
+                return res.status(200).send(buffer);
             }
         }
         // if the extension is supported
